@@ -1,4 +1,4 @@
-# @phyrextsai/ascii-canvas
+# @phyrex/ascii-canvas
 
 ![banner](https://raw.githubusercontent.com/phyrextsai/ascii-canvas/main/assets/banner.svg)
 
@@ -31,7 +31,7 @@
 ```html
 <ascii-canvas id="ac" style="width: 320px; aspect-ratio: 1/1;"></ascii-canvas>
 <script type="module">
-  import "https://esm.sh/@phyrextsai/ascii-canvas";
+  import "https://esm.sh/@phyrex/ascii-canvas";
 
   const img = new Image();
   img.crossOrigin = "anonymous";
@@ -43,11 +43,11 @@
 ### npm
 
 ```sh
-npm install @phyrextsai/ascii-canvas
+npm install @phyrex/ascii-canvas
 ```
 
 ```js
-import "@phyrextsai/ascii-canvas";
+import "@phyrex/ascii-canvas";
 
 const ac = document.querySelector("ascii-canvas");
 ac.source = someCanvasOrVideoOrImage;
@@ -148,7 +148,7 @@ The element does nothing until `connectedCallback` fires in a browser.
 | [textmode.js](https://github.com/datavis-tech/textmode.js) | Active | None | Image only, no Custom Element |
 | [ts-ascii-engine](https://github.com/Zerefa/ts-ascii-engine) | Young (<1yr) | None | Canvas |
 | [ascii-image](https://www.npmjs.com/package/ascii-image) | Dead | None | Image only |
-| **@phyrextsai/ascii-canvas** | This | None | Image / video / canvas, Web Component |
+| **@phyrex/ascii-canvas** | This | None | Image / video / canvas, Web Component |
 
 ---
 

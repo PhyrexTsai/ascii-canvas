@@ -1,5 +1,5 @@
 {
-  "name": "@phyrextsai/ascii-canvas",
+  "name": "@phyrex/ascii-canvas",
   "version": "1.0.0",
   "description": "Framework-agnostic Web Component that converts any source canvas/image/video into ASCII art.",
   "type": "module",

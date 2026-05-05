@@ -42,7 +42,7 @@ jobs:
           <meta charset="utf-8">
           <meta http-equiv="refresh" content="0; url=./demo/">
           <link rel="canonical" href="./demo/">
-          <title>@phyrextsai/ascii-canvas</title>
+          <title>@phyrex/ascii-canvas</title>
           <p>Redirecting to <a href="./demo/">/demo/</a>…</p>
           EOF
 
