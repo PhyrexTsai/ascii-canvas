@@ -15,9 +15,7 @@
 
 [**Live demo →**](https://phyrextsai.github.io/ascii-canvas/) · [Live2D variant →](https://github.com/phyrextsai/ascii-canvas-live2d)
 
-<!-- Once Pages is deployed, record the live demo and drop a real GIF here:
-![showcase](./assets/showcase.gif)
--->
+![showcase](https://raw.githubusercontent.com/phyrextsai/ascii-canvas/main/assets/showcase.gif)
 
 - ~2.3 KB gzipped, ESM only
 - Zero deps — no React, Vue, three.js, or pixi
@@ -172,7 +170,3 @@ CI runs all tests on Linux. The Playwright baseline is therefore Linux-only; mac
 ## License
 
 MIT © 2026 Phyrex Tsai
-
-## Credits
-
-Algorithm derived from [shikigami](https://github.com/phyrextsai/shikigami) `src/lib/ascii.ts`.
