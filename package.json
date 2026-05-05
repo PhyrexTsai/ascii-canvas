@@ -1,6 +1,6 @@
 {
   "name": "@phyrex/ascii-canvas",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Framework-agnostic Web Component that converts any source canvas/image/video into ASCII art.",
   "type": "module",
   "main": "./dist/index.js",
