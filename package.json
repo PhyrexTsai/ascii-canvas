@@ -1,0 +1,57 @@
+{
+  "name": "@phyrextsai/ascii-canvas",
+  "version": "0.0.1",
+  "description": "Framework-agnostic Web Component that converts any source canvas/image/video into ASCII art.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist test-results playwright-report _site",
+    "test:types": "tsc --noEmit -p tests/tsconfig.json",
+    "test:size": "node tests/check-size.mjs",
+    "test:visual": "playwright test",
+    "pretest": "npm run build",
+    "test": "npm run test:types && npm run test:size && npm run test:visual",
+    "update-baseline": "npm run build && playwright test --update-snapshots",
+    "prepublishOnly": "npm test"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.59.1",
+    "typescript": "^5.6.0"
+  },
+  "keywords": [
+    "ascii",
+    "ascii-art",
+    "canvas",
+    "web-component",
+    "custom-element",
+    "image",
+    "video"
+  ],
+  "author": "Phyrex Tsai <x01ep23i@hotmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/phyrextsai/ascii-canvas.git"
+  },
+  "bugs": {
+    "url": "https://github.com/phyrextsai/ascii-canvas/issues"
+  },
+  "homepage": "https://github.com/phyrextsai/ascii-canvas#readme",
+  "publishConfig": {
+    "access": "public"
+  }
+}

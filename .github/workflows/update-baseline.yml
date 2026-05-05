@@ -1,0 +1,48 @@
+# One-shot bootstrap (or post-demo-change refresh) for Playwright Linux baselines.
+# Trigger from GitHub UI: Actions → update-baseline → Run workflow.
+# It runs the visual tests with --update-snapshots and commits the resulting PNG(s) back to the branch.
+name: update-baseline
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+
+      - run: npx playwright install --with-deps chromium
+
+      - run: npm run build
+
+      - run: npx playwright test --update-snapshots
+
+      - name: Commit baseline if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add tests/visual.spec.ts-snapshots/
+          if git diff --staged --quiet; then
+            echo "No baseline changes to commit."
+          else
+            git commit -m "chore: update Playwright Linux baseline"
+            git push
+          fi

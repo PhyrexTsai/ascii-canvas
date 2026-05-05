@@ -1,0 +1,28 @@
+node_modules/
+dist/
+.DS_Store
+*.log
+
+# TypeScript incremental build cache
+*.tsbuildinfo
+
+# Editors / IDEs
+.vscode/
+.idea/
+
+# Env (keep examples)
+.env
+.env.*
+!.env.example
+
+# Playwright
+playwright-report/
+test-results/
+tests/visual.spec.ts-snapshots/*-darwin.png
+tests/visual.spec.ts-snapshots/*-win32.png
+
+# Pages staging
+_site/
+
+# npm pack output
+*.tgz

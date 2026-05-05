@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>@phyrextsai/ascii-canvas demo</title>
+<style>
+  body {
+    background: #0e0e10;
+    color: #e6e6e6;
+    font-family: ui-monospace, Menlo, monospace;
+    margin: 0;
+    padding: 24px;
+  }
+  h1 { margin: 0 0 4px; font-size: 20px; }
+  p.tag { margin: 0 0 24px; opacity: 0.6; font-size: 13px; }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+  }
+  .card {
+    background: #18181b;
+    border: 1px solid #2a2a2e;
+    border-radius: 6px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .card h2 {
+    margin: 0 0 4px;
+    font-size: 13px;
+    opacity: 0.8;
+    font-weight: 500;
+  }
+  .label {
+    font-size: 10px;
+    opacity: 0.5;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .src, ascii-canvas {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    background: #000;
+    display: block;
+    overflow: hidden;
+  }
+  .src > * {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+</style>
+</head>
+<body>
+
+<h1>&lt;ascii-canvas&gt; demo</h1>
+<p class="tag">top: original source · bottom: ASCII output</p>
+
+<div class="grid">
+  <div class="card">
+    <h2>1. HTMLImageElement</h2>
+    <span class="label">source</span>
+    <div class="src" id="src-image-wrap"></div>
+    <span class="label">↓ ASCII</span>
+    <ascii-canvas id="case-image"></ascii-canvas>
+  </div>
+  <div class="card">
+    <h2>2. HTMLVideoElement (captureStream)</h2>
+    <span class="label">source</span>
+    <div class="src" id="src-video-wrap"></div>
+    <span class="label">↓ ASCII</span>
+    <ascii-canvas id="case-video"></ascii-canvas>
+  </div>
+  <div class="card">
+    <h2>3. HTMLCanvasElement (animated)</h2>
+    <span class="label">source</span>
+    <div class="src" id="src-canvas-wrap"></div>
+    <span class="label">↓ ASCII</span>
+    <ascii-canvas id="case-canvas"></ascii-canvas>
+  </div>
+</div>
+
+<script type="module">
+  import "../dist/index.js";
+
+  const params = new URLSearchParams(location.search);
+  const TEST_MODE = params.has("test");
+
+  // ---- Source 1: static image via data URI -----------------------------
+  function makeStaticImage() {
+    const c = document.createElement("canvas");
+    c.width = c.height = 200;
+    const g = c.getContext("2d");
+    const grad = g.createLinearGradient(0, 0, 200, 200);
+    grad.addColorStop(0, "#ff5577");
+    grad.addColorStop(0.5, "#ffcc44");
+    grad.addColorStop(1, "#22ddaa");
+    g.fillStyle = grad;
+    g.fillRect(0, 0, 200, 200);
+    g.fillStyle = "#0e0e10";
+    g.font = "bold 56px ui-monospace, Menlo, monospace";
+    g.textAlign = "center";
+    g.textBaseline = "middle";
+    g.fillText("ASCII", 100, 100);
+    const img = new Image();
+    img.src = c.toDataURL();
+    return img;
+  }
+
+  // ---- Source 3: rotating colored dots (canvas case) -------------------
+  const animCanvas = document.createElement("canvas");
+  animCanvas.width = animCanvas.height = 240;
+  const ag = animCanvas.getContext("2d");
+
+  function drawFrame(t) {
+    ag.fillStyle = "#0e0e10";
+    ag.fillRect(0, 0, 240, 240);
+    ag.save();
+    ag.translate(120, 120);
+    ag.rotate(t);
+    const sides = 6;
+    for (let i = 0; i < sides; i++) {
+      const a = (i / sides) * Math.PI * 2;
+      ag.fillStyle = `hsl(${(i * 60 + (t * 180) / Math.PI) % 360}, 80%, 60%)`;
+      ag.beginPath();
+      ag.arc(Math.cos(a) * 60, Math.sin(a) * 60, 28, 0, Math.PI * 2);
+      ag.fill();
+    }
+    ag.restore();
+  }
+
+  // ---- Source 2: pulsing concentric rings (video via captureStream) ----
+  const ringsCanvas = document.createElement("canvas");
+  ringsCanvas.width = ringsCanvas.height = 240;
+  const rg = ringsCanvas.getContext("2d");
+
+  function drawRings(t) {
+    rg.fillStyle = "#0e0e10";
+    rg.fillRect(0, 0, 240, 240);
+    rg.lineWidth = 6;
+    for (let i = 0; i < 6; i++) {
+      const r = (t * 40 + i * 22) % 130;
+      rg.strokeStyle = `hsl(${(i * 60 + t * 90) % 360}, 80%, 60%)`;
+      rg.beginPath();
+      rg.arc(120, 120, r, 0, Math.PI * 2);
+      rg.stroke();
+    }
+  }
+
+  let start = performance.now();
+  function animLoop(now) {
+    const t = TEST_MODE ? 0.7 : (now - start) / 1000;
+    drawFrame(t);
+    drawRings(t);
+    if (!TEST_MODE) requestAnimationFrame(animLoop);
+  }
+
+  // ---- Wire sources to elements ----------------------------------------
+  const elImage = document.querySelector("#case-image");
+  const elVideo = document.querySelector("#case-video");
+  const elCanvas = document.querySelector("#case-canvas");
+  const srcImageWrap = document.querySelector("#src-image-wrap");
+  const srcVideoWrap = document.querySelector("#src-video-wrap");
+  const srcCanvasWrap = document.querySelector("#src-canvas-wrap");
+
+  const img = makeStaticImage();
+  const onImgReady = () => {
+    elImage.source = img;
+    const preview = img.cloneNode();
+    srcImageWrap.appendChild(preview);
+  };
+  if (img.complete && img.naturalWidth > 0) onImgReady();
+  else img.addEventListener("load", onImgReady, { once: true });
+
+  // Animated canvas: feed library and also display as source preview.
+  drawFrame(TEST_MODE ? 0.7 : 0);
+  drawRings(TEST_MODE ? 0.7 : 0);
+  elCanvas.source = animCanvas;
+  srcCanvasWrap.appendChild(animCanvas);
+
+  // Video case: pipe the rings canvas through a MediaStream.
+  const stream = ringsCanvas.captureStream(30);
+  const vid = document.createElement("video");
+  vid.muted = true;
+  vid.playsInline = true;
+  vid.srcObject = stream;
+  vid.addEventListener("loadedmetadata", () => {
+    vid.play().then(() => {
+      elVideo.source = vid;
+    });
+  });
+  srcVideoWrap.appendChild(vid);
+
+  // Drive animation loop (no-op extra frame in TEST_MODE).
+  requestAnimationFrame(animLoop);
+
+  // Test hook: signal Playwright when first frame on every element has rendered.
+  if (TEST_MODE) {
+    const wait2RAF = () =>
+      new Promise((r) =>
+        requestAnimationFrame(() => requestAnimationFrame(() => r(true))),
+      );
+    const imgReady = (img.complete && img.naturalWidth > 0)
+      ? Promise.resolve()
+      : new Promise((r) => img.addEventListener("load", r, { once: true }));
+    const vidReady = new Promise((r) =>
+      vid.addEventListener("playing", r, { once: true }),
+    );
+    window.__asciiTestReady = Promise.all([
+      imgReady.then(wait2RAF),
+      wait2RAF(), // canvas case is sync-ready
+      vidReady.then(wait2RAF),
+    ]).then(() => true);
+  }
+</script>
+
+</body>
+</html>
