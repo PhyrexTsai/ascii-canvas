@@ -26,3 +26,6 @@ _site/
 
 # npm pack output
 *.tgz
+
+# Local planning, not for distribution
+tasks.md

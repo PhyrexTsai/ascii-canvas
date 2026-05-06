@@ -85,7 +85,7 @@ All attributes reflect to `#opts` via `attributeChangedCallback`. Changing `cell
 | `pause()` | Equivalent to `setAttribute("paused", "")` |
 | `resume()` | Equivalent to `removeAttribute("paused")` |
 
-There is no `getText()`, no theming API, and no per-frame events. By design — see [tasks.md](./tasks.md) D8/D9.
+There is no `getText()`, no theming API, and no per-frame events. By design.
 
 ### Lifecycle
 
